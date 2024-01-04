@@ -4,7 +4,8 @@
 
 #include "Menu.h"
 #include "FileReader.h"
-#include "FileWriter.h"
+//#include "FileWriter.h"
+#include "GeneticAlgorithm.h"
 
 Menu::Menu(){
     matrix = nullptr;
@@ -86,39 +87,33 @@ void Menu::manualTests(){
         return;
     }
 
-    SimulatedAnnealing* simulatedAnnealing = new SimulatedAnnealing(matrix, a, stopCriteria);
+    GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix);
     timer.startTimer();
-    simulatedAnnealing->launch(timer);
+    geneticAlgorithm->launch(timer);
 
-    solution = simulatedAnnealing->bestSolution;
-    objectiveFunction = simulatedAnnealing->bestObjectiveFunction;
+    solution = geneticAlgorithm->bestSolution;
+    objectiveFunction = geneticAlgorithm->bestObjectiveFunction;
     printSolution();
 
-    std::cout << "Exp(-1/T_k) = "<< exp(-1/simulatedAnnealing->T_k) << std::endl;
-    std::cout << "T_k = "<< simulatedAnnealing->T_k << std::endl;
-    std::cout << "Solution found in: " << simulatedAnnealing->whenFound << std::endl;
+    std::cout << "Solution found in: " << geneticAlgorithm->whenFound << std::endl;
 
-    delete simulatedAnnealing;
+    delete geneticAlgorithm;
 }
 
 void Menu::automaticTests(){
 
-    FileWriter* fileWriter = new FileWriter();
+//    FileWriter* fileWriter = new FileWriter();
 
     for(int i=0; i<10; i++){
-        SimulatedAnnealing* simulatedAnnealing = new SimulatedAnnealing(matrix, a, stopCriteria);
+//        SimulatedAnnealing* simulatedAnnealing = new SimulatedAnnealing(matrix, a, stopCriteria);
         timer.startTimer();
-        simulatedAnnealing->launch(timer);
+//        simulatedAnnealing->launch(timer);
+//
+//        simulatedAnnealing->printSolution();
+//        std::cout << "Solution found in: " << simulatedAnnealing->whenFound << std::endl;
 
-        simulatedAnnealing->printSolution();
-        std::cout << "Exp(-1/T_k) = "<< exp(-1/simulatedAnnealing->T_k) << std::endl;
-        std::cout << "T_k = "<< simulatedAnnealing->T_k << std::endl;
-        std::cout << "Solution found in: " << simulatedAnnealing->whenFound << std::endl;
-
-        fileWriter->resultsTime[i] = simulatedAnnealing->whenFound;
-        fileWriter->resultsRoute[i] = simulatedAnnealing->bestObjectiveFunction;
-        fileWriter->resultsTemperature[i] = simulatedAnnealing->T_k;
-        fileWriter->resultsE[i] = exp(-1/simulatedAnnealing->T_k);
+//        fileWriter->resultsTime[i] = simulatedAnnealing->whenFound;
+//        fileWriter->resultsRoute[i] = simulatedAnnealing->bestObjectiveFunction;
 
         std::string name;
         std::cout << "Give name of file" << std::endl;
@@ -126,15 +121,15 @@ void Menu::automaticTests(){
 
         std::ofstream file(name);
 
-        for(auto entry: simulatedAnnealing->save){
-            file << entry.first << " " << entry.second << std::endl;
-        }
+//        for(auto entry: simulatedAnnealing->save){
+//            file << entry.first << " " << entry.second << std::endl;
+//        }
 
         file.close();
 
         option7();
 
-        delete simulatedAnnealing;
+//        delete simulatedAnnealing;
     }
 
     std::string graph; //f.e. ftv55
@@ -144,9 +139,9 @@ void Menu::automaticTests(){
         i++;
     }
 
-    fileWriter->write("SA", graph);
+//    fileWriter->write("SA", graph);
 
-    delete fileWriter;
+//    delete fileWriter;
 
 }
 

@@ -10,7 +10,7 @@ int main() {
         std::cout << std::endl;
         std::cout << "1. Read data from file and print it" << std::endl;
         std::cout << "2. Read stop criteria" << std::endl;
-        std::cout << "3. Set mutation rate" << std::endl;
+        std::cout << "3. Set initial population size" << std::endl;
         std::cout << "4. Set mutation rate" << std::endl;
         std::cout << "5. Set cross breading coefficient" << std::endl;
         std::cout << "6. Set method of cross breading" << std::endl;
