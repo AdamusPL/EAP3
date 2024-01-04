@@ -10,10 +10,11 @@
 #include "Matrix.h"
 #include <vector>
 #include <list>
+#include <bits/stdc++.h>
 
 class GeneticAlgorithm {
 public:
-    GeneticAlgorithm(int stopCriteria, Matrix*);
+    GeneticAlgorithm(int stopCriteria, Matrix*, double mutationRate, int mutationMethod);
 
     Matrix* matrix;
     std::vector<int> track1;
@@ -26,15 +27,23 @@ public:
 
     int stopCriteria;
     int initialPopulationSize;
+
     double mutationRate;
     double crossBreadingRate;
-    double crossBreadingCoefficient;
 
+    int mutationMethod;
+
+    void launchCrossBreading(Timer timer);
     void PMX();
+
+    void launchMutation(Timer timer);
+    void transpositionMutation();
+    void inversionMutation();
 
     std::vector<int> generateBegSolutionRandom();
     int calculateRoute(std::vector<int> track);
-    void launch(Timer timer);
+
+
 };
 
 

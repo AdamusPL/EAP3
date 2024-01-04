@@ -39,7 +39,8 @@ public:
     int initialPopulationSize;
     double mutationRate;
     double crossBreadingRate;
-    double crossBreadingCoefficient;
+    int crossBreadingMethod;
+    int mutationMethod;
 
 };
 

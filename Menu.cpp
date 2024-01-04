@@ -34,28 +34,31 @@ void Menu::option3() {
 
 void Menu::option4(){
 
-    std::cout<<"Give the cross breading rate:"<<std::endl;
-    std::cin>>crossBreadingRate;
+    std::cout<<"Give the mutation rate:"<<std::endl;
+    std::cin>>mutationRate;
 
 }
 
 void Menu::option5(){
-    std::cout<<"Choose the cross breading coefficient"<<std::endl;
-    std::cin>>crossBreadingCoefficient;
+    std::cout<<"Give the cross breading rate"<<std::endl;
+    std::cin>>crossBreadingRate;
 }
 
 
 void Menu::option6() {
 
     std::cout<<"Choose the cross breading method"<<std::endl;
-    //implementation
+    std::cout <<"1. PMX (Partially Matched Crossover)" << std::endl;
+    std::cin >> crossBreadingMethod;
 
 }
 
 void Menu::option7() {
 
     std::cout<<"Choose the mutation method"<<std::endl;
-    //implementation
+    std::cout << "1. Transposition mutation" << std::endl;
+    std::cout << "2. Inversion mutation" << std::endl;
+    std::cin >> mutationMethod;
 
 }
 
@@ -87,9 +90,10 @@ void Menu::manualTests(){
         return;
     }
 
-    GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix);
+    GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix, mutationRate, mutationMethod);
     timer.startTimer();
-    geneticAlgorithm->launch(timer);
+//    geneticAlgorithm->launchCrossBreading(timer);
+    geneticAlgorithm->launchMutation(timer);
 
     solution = geneticAlgorithm->bestSolution;
     objectiveFunction = geneticAlgorithm->bestObjectiveFunction;
@@ -107,7 +111,7 @@ void Menu::automaticTests(){
     for(int i=0; i<10; i++){
 //        SimulatedAnnealing* simulatedAnnealing = new SimulatedAnnealing(matrix, a, stopCriteria);
         timer.startTimer();
-//        simulatedAnnealing->launch(timer);
+//        simulatedAnnealing->launchCrossBreading(timer);
 //
 //        simulatedAnnealing->printSolution();
 //        std::cout << "Solution found in: " << simulatedAnnealing->whenFound << std::endl;

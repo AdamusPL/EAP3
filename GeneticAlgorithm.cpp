@@ -4,9 +4,11 @@
 
 #include "GeneticAlgorithm.h"
 
-GeneticAlgorithm::GeneticAlgorithm(int stopCriteria, Matrix* matrix){
+GeneticAlgorithm::GeneticAlgorithm(int stopCriteria, Matrix* matrix, double mutationRate, int mutationMethod){
     this->stopCriteria=stopCriteria;
     this->matrix=matrix;
+    this->mutationRate=mutationRate;
+    this->mutationMethod=mutationMethod;
     objectiveFunction1 = 0;
     objectiveFunction2 = 0;
 }
@@ -140,7 +142,7 @@ void GeneticAlgorithm::PMX(){
 
 }
 
-void GeneticAlgorithm::launch(Timer timer){
+void GeneticAlgorithm::launchCrossBreading(Timer timer){
 
     srand(time(NULL)); //initialize the seed
 
@@ -186,10 +188,96 @@ void GeneticAlgorithm::launch(Timer timer){
     }
 }
 
+void GeneticAlgorithm::transpositionMutation(){
+
+    std::vector<int> newTrack1;
+    newTrack1 = bestSolution;
+    int randomTownIndex1;
+    int randomTownIndex2;
+
+    for(int i=0; i<matrix->nrV*mutationRate; i++){
+        randomTownIndex1 = rand() % (newTrack1.size()); //1. random town
+        randomTownIndex2 = rand() % (newTrack1.size()); //2. random town
+
+        while(randomTownIndex1 == randomTownIndex2){ //it has to be 2 different towns
+            randomTownIndex2 = rand() % (newTrack1.size()); //2. random town
+        }
+
+        std::swap(newTrack1[randomTownIndex1], newTrack1[randomTownIndex2]); //swap
+
+    }
+
+    int newObjectiveFunction = calculateRoute(newTrack1);
+
+    if(newObjectiveFunction < bestObjectiveFunction) {
+        bestObjectiveFunction = newObjectiveFunction;
+        bestSolution = newTrack1;
+        std::cout << bestObjectiveFunction << std::endl;
+    }
+
+}
+
+void GeneticAlgorithm::inversionMutation(){
+
+    std::vector<int> newTrack1;
+    //stack to reverse the numbers
+    std::stack<int> substring;
+    newTrack1 = bestSolution;
+    int randomTownIndex1;
+    int randomTownIndex2;
+
+    for(int i=0; i<matrix->nrV*mutationRate; i++){
+        randomTownIndex1 = rand() % (newTrack1.size()-1); //we have to have at least 2 elements to invert
+        randomTownIndex2 = (rand() % newTrack1.size()) + 1; //random towns
+
+        for(int j=randomTownIndex1; j<randomTownIndex2; j++){
+            substring.emplace(newTrack1[j]);
+        }
+
+        for(int j=randomTownIndex1; j<randomTownIndex2; j++){
+            newTrack1[j] = substring.top();
+            substring.pop();
+        }
+
+    }
+
+    int newObjectiveFunction = calculateRoute(newTrack1);
+
+    if(newObjectiveFunction < bestObjectiveFunction) {
+        bestObjectiveFunction = newObjectiveFunction;
+        bestSolution = newTrack1;
+        std::cout << bestObjectiveFunction << std::endl;
+    }
+
+}
+
+void GeneticAlgorithm::launchMutation(Timer timer){
+
+    srand(time(NULL)); //initialize the seed
+
+    //generate 2 random tracks
+    bestSolution = GeneticAlgorithm::generateBegSolutionRandom();
+    bestObjectiveFunction = calculateRoute(bestSolution);
+    whenFound = timer.stopTimer() / 1000000.0;
+
+    while(timer.stopTimer() / 1000000.0 < stopCriteria){
+
+        if(mutationMethod == 1) {
+            GeneticAlgorithm::transpositionMutation();
+        }
+
+        else if(mutationMethod == 2){
+            GeneticAlgorithm::inversionMutation();
+        }
+
+    }
+
+}
+
 int GeneticAlgorithm::calculateRoute(std::vector<int> track){
     int objectiveFunction = 0;
 
-    for (int i = 1; i < track1.size(); ++i) {
+    for (int i = 1; i < track.size(); ++i) {
         objectiveFunction+=matrix->adjMatrix[track[i - 1]][track[i]];
     }
 
