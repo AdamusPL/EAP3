@@ -5,7 +5,7 @@ int main() {
     int option=0;
     Menu menu;
 
-    while(option!=8){ //menu
+    while(option!=9){ //menu
 
         std::cout << std::endl;
         std::cout << "1. Read data from file and print it" << std::endl;

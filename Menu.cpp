@@ -10,6 +10,11 @@
 Menu::Menu(){
     matrix = nullptr;
     stopCriteria = 0;
+    initialPopulationSize = 0;
+    mutationMethod = 0;
+    crossBreadingMethod = 0;
+    mutationRate = 0;
+    crossBreadingRate = 0;
     objectiveFunction = 0;
 }
 
@@ -63,8 +68,8 @@ void Menu::option7() {
 }
 
 void Menu::option8(){
-    if(stopCriteria == 0){
-        std::cout<<"Stop criteria hasn't been set yet"<<std::endl;
+    if(stopCriteria == 0 || initialPopulationSize == 0 || mutationMethod == 0 || mutationRate == 0){
+        std::cout<<"Not all criteria have been read"<<std::endl;
         return;
     }
 
@@ -90,10 +95,10 @@ void Menu::manualTests(){
         return;
     }
 
-    GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix, mutationRate, mutationMethod);
+    GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix, mutationRate, mutationMethod, initialPopulationSize);
     timer.startTimer();
 //    geneticAlgorithm->launchCrossBreading(timer);
-    geneticAlgorithm->launchMutation(timer);
+    geneticAlgorithm->launch(timer);
 
     solution = geneticAlgorithm->bestSolution;
     objectiveFunction = geneticAlgorithm->bestObjectiveFunction;
