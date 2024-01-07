@@ -14,11 +14,11 @@
 
 class GeneticAlgorithm {
 public:
-    GeneticAlgorithm(int stopCriteria, Matrix*, double mutationRate, int mutationMethod, int initialPopulationSize);
+    GeneticAlgorithm(int stopCriteria, Matrix*, Timer, double mutationRate, int mutationMethod,
+                     int initialPopulationSize, double crossoverRate, int crossoverMethod);
 
     Matrix* matrix;
-    int objectiveFunction1;
-    int objectiveFunction2;
+    Timer timer;
     std::vector<int> bestSolution;
     int bestObjectiveFunction;
     double whenFound;
@@ -33,11 +33,11 @@ public:
     int mutationMethod;
 
 
-    double crossBreadingRate;
-    void launchCrossBreading(Timer timer);
+    double crossoverRate;
+    int crossoverMethod;
     void PMX(std::vector<int>, std::vector<int>);
 
-    void launch(Timer timer);
+    void launch();
     void transpositionMutation(std::vector<int>&);
     void inversionMutation(std::vector<int>&);
 

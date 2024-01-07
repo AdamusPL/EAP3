@@ -12,9 +12,9 @@ Menu::Menu(){
     stopCriteria = 0;
     initialPopulationSize = 0;
     mutationMethod = 0;
-    crossBreadingMethod = 0;
+    crossoverMethod = 0;
     mutationRate = 0;
-    crossBreadingRate = 0;
+    crossoverRate = 0;
     objectiveFunction = 0;
 }
 
@@ -45,16 +45,16 @@ void Menu::option4(){
 }
 
 void Menu::option5(){
-    std::cout<<"Give the cross breading rate"<<std::endl;
-    std::cin>>crossBreadingRate;
+    std::cout<<"Give the crossover rate"<<std::endl;
+    std::cin >> crossoverRate;
 }
 
 
 void Menu::option6() {
 
-    std::cout<<"Choose the cross breading method"<<std::endl;
+    std::cout<<"Choose the crossover method"<<std::endl;
     std::cout <<"1. PMX (Partially Matched Crossover)" << std::endl;
-    std::cin >> crossBreadingMethod;
+    std::cin >> crossoverMethod;
 
 }
 
@@ -89,16 +89,27 @@ void Menu::option8(){
     }
 }
 
+void Menu::option0(){
+    stopCriteria = 120;
+    initialPopulationSize = 100;
+    mutationRate = 0.01;
+    crossoverRate = 0.8;
+    crossoverMethod = 1;
+    mutationMethod = 2;
+}
+
 void Menu::manualTests(){
     if(matrix == nullptr){
         std::cout<<"No data hasn't been read yet"<<std::endl;
         return;
     }
 
-    GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix, mutationRate, mutationMethod, initialPopulationSize);
+    GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix, timer,
+                                                              mutationRate, mutationMethod, initialPopulationSize,
+                                                              crossoverRate, crossoverMethod);
     timer.startTimer();
 //    geneticAlgorithm->launchCrossBreading(timer);
-    geneticAlgorithm->launch(timer);
+    geneticAlgorithm->launch();
 
     solution = geneticAlgorithm->bestSolution;
     objectiveFunction = geneticAlgorithm->bestObjectiveFunction;

@@ -24,6 +24,7 @@ public:
     void option6();
     void option7();
     void option8();
+    void option0();
     void printSolution();
     void manualTests();
     void automaticTests();
@@ -38,8 +39,8 @@ public:
     int stopCriteria;
     int initialPopulationSize;
     double mutationRate;
-    double crossBreadingRate;
-    int crossBreadingMethod;
+    double crossoverRate;
+    int crossoverMethod;
     int mutationMethod;
 
 };

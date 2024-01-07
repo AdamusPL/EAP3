@@ -4,14 +4,15 @@
 
 #include "GeneticAlgorithm.h"
 
-GeneticAlgorithm::GeneticAlgorithm(int stopCriteria, Matrix* matrix, double mutationRate, int mutationMethod, int initialPopulationSize){
+GeneticAlgorithm::GeneticAlgorithm(int stopCriteria, Matrix* matrix, Timer timer, double mutationRate, int mutationMethod, int initialPopulationSize, double crossoverRate, int crossoverMethod){
     this->stopCriteria=stopCriteria;
     this->matrix=matrix;
+    this->timer=timer;
     this->mutationRate=mutationRate;
     this->mutationMethod=mutationMethod;
     this->initialPopulationSize=initialPopulationSize;
-    objectiveFunction1 = 0;
-    objectiveFunction2 = 0;
+    this->crossoverRate=crossoverRate;
+    this->crossoverMethod=crossoverMethod;
 }
 
 std::vector<int> GeneticAlgorithm::generateBegSolutionRandom(){
@@ -36,12 +37,12 @@ std::vector<int> GeneticAlgorithm::generateBegSolutionRandom(){
 
     }
 
-    for (int i = 0; i < track.size(); ++i) {
-        std::cout << track[i] << "->";
-    }
-
-    std::cout << track[0];
-    std::cout<<std::endl;
+//    for (int i = 0; i < track.size(); ++i) {
+//        std::cout << track[i] << "->";
+//    }
+//
+//    std::cout << track[0];
+//    std::cout<<std::endl;
     return track;
 }
 
@@ -52,9 +53,8 @@ void GeneticAlgorithm::PMX(std::vector<int> track1, std::vector<int> track2){
     int firstCrossBreadingPoint = rand()%(track1.size()-1); //we can't cross only 1 last element
     int secondCrossBreadingPoint = rand()%(track1.size());
 
-    //ALSO THESE TWO VARIABLES HAS TO DIFFER AT LEAST BY 2!!! STILL NEED TO WRITE IT
-    //x2 > x1
-    while(secondCrossBreadingPoint < firstCrossBreadingPoint){
+    //x2 > x1 && we can cross at least 2 element array
+    while(secondCrossBreadingPoint < firstCrossBreadingPoint && secondCrossBreadingPoint-firstCrossBreadingPoint<2){
         secondCrossBreadingPoint = rand()%(track1.size());
     }
 
@@ -89,11 +89,11 @@ void GeneticAlgorithm::PMX(std::vector<int> track1, std::vector<int> track2){
         for (int j = firstCrossBreadingPoint; j < secondCrossBreadingPoint; ++j) {
 
             //if town exists already in new track, don't insert it
-            if(track1[i] == child1[i]){
+            if(track1[i] == child1[j]){
                 shouldInsert1 = false;
             }
 
-            if(track2[i] == child2[i]){
+            if(track2[i] == child2[j]){
                 shouldInsert2 = false;
             }
 
@@ -105,7 +105,7 @@ void GeneticAlgorithm::PMX(std::vector<int> track1, std::vector<int> track2){
 
         //insert town if it doesn't exist
         if(shouldInsert1){
-            track1[i] = child1[i];
+            child1[i] = track1[i];
         }
 
         else{
@@ -113,7 +113,7 @@ void GeneticAlgorithm::PMX(std::vector<int> track1, std::vector<int> track2){
         }
 
         if(shouldInsert2){
-            track2[i] = child2[i];
+            child2[i] = track2[i];
         }
 
         else{
@@ -142,20 +142,44 @@ void GeneticAlgorithm::PMX(std::vector<int> track1, std::vector<int> track2){
     }
 
     //mutations
-    if (mutationMethod == 1) {
-        GeneticAlgorithm::transpositionMutation(child1);
-        GeneticAlgorithm::transpositionMutation(child2);
+    if(static_cast<double>(rand()%100+1) / 100.0 <= mutationRate) {
+        if (mutationMethod == 1) {
+            GeneticAlgorithm::transpositionMutation(child1);
+            GeneticAlgorithm::transpositionMutation(child2);
+
+        } else if (mutationMethod == 2) {
+            GeneticAlgorithm::inversionMutation(child1);
+            GeneticAlgorithm::inversionMutation(child2);
+
+        }
 
         children.emplace_back(calculateRoute(child1), child1);
         children.emplace_back(calculateRoute(child2), child2);
+    }
 
-    } else if (mutationMethod == 2) {
-        GeneticAlgorithm::inversionMutation(child1);
-        GeneticAlgorithm::inversionMutation(child2);
-
+    else{
         children.emplace_back(calculateRoute(child1), child1);
         children.emplace_back(calculateRoute(child2), child2);
 
+        //changing best solution
+        int newObjectiveFunction = calculateRoute(child1);
+
+        if(newObjectiveFunction < bestObjectiveFunction) {
+            bestObjectiveFunction = newObjectiveFunction;
+            bestSolution = child1;
+            whenFound = timer.stopTimer() / 1000000.0;
+            std::cout << bestObjectiveFunction << std::endl;
+        }
+
+        //changing best solution
+        newObjectiveFunction = calculateRoute(child2);
+
+        if(newObjectiveFunction < bestObjectiveFunction) {
+            bestObjectiveFunction = newObjectiveFunction;
+            bestSolution = child2;
+            whenFound = timer.stopTimer() / 1000000.0;
+            std::cout << bestObjectiveFunction << std::endl;
+        }
     }
 
 }
@@ -165,23 +189,23 @@ void GeneticAlgorithm::transpositionMutation(std::vector<int>& track){
     int randomTownIndex1;
     int randomTownIndex2;
 
-    for(int i=0; i<matrix->nrV*mutationRate; i++){
-        randomTownIndex1 = rand() % (track.size()); //1. random town
+    //mutation
+    randomTownIndex1 = rand() % (track.size()); //1. random town
+    randomTownIndex2 = rand() % (track.size()); //2. random town
+
+    while(randomTownIndex1 == randomTownIndex2){ //it has to be 2 different towns
         randomTownIndex2 = rand() % (track.size()); //2. random town
-
-        while(randomTownIndex1 == randomTownIndex2){ //it has to be 2 different towns
-            randomTownIndex2 = rand() % (track.size()); //2. random town
-        }
-
-        std::swap(track[randomTownIndex1], track[randomTownIndex2]); //swap
-
     }
 
+    std::swap(track[randomTownIndex1], track[randomTownIndex2]); //swap
+
+    //changing best solution
     int newObjectiveFunction = calculateRoute(track);
 
     if(newObjectiveFunction < bestObjectiveFunction) {
         bestObjectiveFunction = newObjectiveFunction;
         bestSolution = track;
+        whenFound = timer.stopTimer() / 1000000.0;
         std::cout << bestObjectiveFunction << std::endl;
     }
 
@@ -194,32 +218,32 @@ void GeneticAlgorithm::inversionMutation(std::vector<int>& track){
     int randomTownIndex1;
     int randomTownIndex2;
 
-    for(int i=0; i<matrix->nrV*mutationRate; i++){
-        randomTownIndex1 = rand() % (track.size() - 1); //we have to have at least 2 elements to invert
-        randomTownIndex2 = (rand() % track.size()) + 1; //random towns
+    //mutation
+    randomTownIndex1 = rand() % (track.size() - 1); //we have to have at least 2 elements to invert
+    randomTownIndex2 = (rand() % track.size()) + 1; //random towns
 
-        for(int j=randomTownIndex1; j<randomTownIndex2; j++){
-            substring.emplace(track[j]);
-        }
-
-        for(int j=randomTownIndex1; j<randomTownIndex2; j++){
-            track[j] = substring.top();
-            substring.pop();
-        }
-
+    for(int j=randomTownIndex1; j<randomTownIndex2; j++){
+        substring.emplace(track[j]);
     }
 
+    for(int j=randomTownIndex1; j<randomTownIndex2; j++){
+        track[j] = substring.top();
+        substring.pop();
+    }
+
+    //changing best solution
     int newObjectiveFunction = calculateRoute(track);
 
     if(newObjectiveFunction < bestObjectiveFunction) {
         bestObjectiveFunction = newObjectiveFunction;
         bestSolution = track;
+        whenFound = timer.stopTimer() / 1000000.0;
         std::cout << bestObjectiveFunction << std::endl;
     }
 
 }
 
-void GeneticAlgorithm::launch(Timer timer){
+void GeneticAlgorithm::launch(){
 
     srand(time(NULL)); //initialize the seed
 
@@ -228,7 +252,9 @@ void GeneticAlgorithm::launch(Timer timer){
     //generate random population
     while(population.size() < initialPopulationSize){
         std::vector<int> solution = GeneticAlgorithm::generateBegSolutionRandom();
+        bestSolution = solution;
         int objectiveFunction = calculateRoute(solution);
+        bestObjectiveFunction = objectiveFunction;
         population.emplace_back(objectiveFunction, solution);
     }
 
@@ -258,8 +284,14 @@ void GeneticAlgorithm::launch(Timer timer){
                 randomParent2 = rand()%population.size();
             }
 
-            GeneticAlgorithm::PMX(population[randomParent1].second, population[randomParent2].second);
+            if(static_cast<double>(rand()%100+1) / 100.0 <= crossoverRate) {
+                GeneticAlgorithm::PMX(population[randomParent1].second, population[randomParent2].second);
+            }
 
+        }
+
+        for(int i=0; i<children.size(); i++){
+            population.push_back(children[i]);
         }
 
         //new population has been made

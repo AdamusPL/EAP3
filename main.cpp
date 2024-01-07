@@ -53,6 +53,10 @@ int main() {
                 menu.option8();
                 break;
 
+            case 0: //custom setup
+                menu.option0();
+                break;
+
         }
 
     }
