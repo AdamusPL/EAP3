@@ -91,11 +91,11 @@ void Menu::option8(){
 
 void Menu::option0(){
     stopCriteria = 120;
-    initialPopulationSize = 100;
+    initialPopulationSize = 2500;
     mutationRate = 0.01;
     crossoverRate = 0.8;
     crossoverMethod = 1;
-    mutationMethod = 2;
+    mutationMethod = 1;
 }
 
 void Menu::manualTests(){
@@ -107,7 +107,7 @@ void Menu::manualTests(){
     GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix, timer,
                                                               mutationRate, mutationMethod, initialPopulationSize,
                                                               crossoverRate, crossoverMethod);
-    timer.startTimer();
+
 //    geneticAlgorithm->launchCrossBreading(timer);
     geneticAlgorithm->launch();
 

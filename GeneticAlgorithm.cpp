@@ -67,7 +67,6 @@ void GeneticAlgorithm::PMX(std::vector<int> track1, std::vector<int> track2){
         child1.push_back(-1);
         child2.push_back(-1);
     }
-
     //swap
     for (int i = firstCrossBreadingPoint; i < secondCrossBreadingPoint; ++i) {
         child1[i]=track2[i];
@@ -244,7 +243,7 @@ void GeneticAlgorithm::inversionMutation(std::vector<int>& track){
 }
 
 void GeneticAlgorithm::launch(){
-
+    timer.startTimer();
     srand(time(NULL)); //initialize the seed
 
     int n, randomParent1, randomParent2;
@@ -258,6 +257,7 @@ void GeneticAlgorithm::launch(){
         population.emplace_back(objectiveFunction, solution);
     }
 
+
     while(timer.stopTimer() / 1000000.0 < stopCriteria) {
 
         //clear table for new children
@@ -267,11 +267,12 @@ void GeneticAlgorithm::launch(){
         //1. sort
         std::sort(population.begin(), population.end());
 
-        //number of surviving persons
-        n = 30;
+        //elitism
+        //number of dying persons
+        n = 0.75*initialPopulationSize;
 
         //2. kill not used solutions
-        for (int i = 0; i < initialPopulationSize-n; i++) {
+        for (int i = 0; i < n; i++) {
             population.pop_back();
         }
 
