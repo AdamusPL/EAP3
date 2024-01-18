@@ -9,6 +9,8 @@
 #include "Matrix.h"
 #include "Timer.h"
 #include "FileReader.h"
+#include "FileWriter.h"
+#include "GeneticAlgorithm.h"
 #include <fstream>
 #include <vector>
 

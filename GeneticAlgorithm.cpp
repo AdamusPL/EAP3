@@ -168,6 +168,7 @@ void GeneticAlgorithm::PMX(std::vector<int> track1, std::vector<int> track2){
             bestSolution = child1;
             whenFound = timer.stopTimer() / 1000000.0;
             std::cout << bestObjectiveFunction << std::endl;
+            save.emplace_back(whenFound, bestObjectiveFunction);
         }
 
         //changing best solution
@@ -178,6 +179,7 @@ void GeneticAlgorithm::PMX(std::vector<int> track1, std::vector<int> track2){
             bestSolution = child2;
             whenFound = timer.stopTimer() / 1000000.0;
             std::cout << bestObjectiveFunction << std::endl;
+            save.emplace_back(whenFound, bestObjectiveFunction);
         }
     }
 
@@ -247,6 +249,7 @@ void GeneticAlgorithm::launch(){
     srand(time(NULL)); //initialize the seed
 
     int n, randomParent1, randomParent2;
+    int j;
 
     //generate random population
     while(population.size() < initialPopulationSize){
@@ -267,17 +270,8 @@ void GeneticAlgorithm::launch(){
         //1. sort
         std::sort(population.begin(), population.end());
 
-        //elitism
-        //number of dying persons
-        n = 0.75*initialPopulationSize;
-
-        //2. kill not used solutions
-        for (int i = 0; i < n; i++) {
-            population.pop_back();
-        }
-
         //crossover
-        while(population.size() + children.size() < initialPopulationSize){
+        while(children.size() < initialPopulationSize){
             randomParent1 = rand()%population.size();
             randomParent2 = rand()%population.size();
 
@@ -291,8 +285,15 @@ void GeneticAlgorithm::launch(){
 
         }
 
-        for(int i=0; i<children.size(); i++){
-            population.push_back(children[i]);
+        std::sort(children.begin(), children.end());
+
+        j = 0;
+
+        for(int i=0; i < initialPopulationSize; i++){
+            if(children[j].first < population[i].first){
+                population[i] = children[j];
+                j++;
+            }
         }
 
         //new population has been made
@@ -310,4 +311,15 @@ int GeneticAlgorithm::calculateRoute(std::vector<int> track){
     objectiveFunction+=matrix->adjMatrix[track[track.size() - 1]][track[0]];
 
     return objectiveFunction;
+}
+
+void GeneticAlgorithm::printSolution(){
+    for (int i = 0; i < bestSolution.size(); ++i) {
+        std::cout << bestSolution[i] << "->";
+    }
+
+    std::cout << bestSolution[0];
+    std::cout<<std::endl;
+    std::cout << bestObjectiveFunction << std::endl;
+
 }

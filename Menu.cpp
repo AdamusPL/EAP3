@@ -3,9 +3,6 @@
 //
 
 #include "Menu.h"
-#include "FileReader.h"
-//#include "FileWriter.h"
-#include "GeneticAlgorithm.h"
 
 Menu::Menu(){
     matrix = nullptr;
@@ -91,7 +88,7 @@ void Menu::option8(){
 
 void Menu::option0(){
     stopCriteria = 120;
-    initialPopulationSize = 2500;
+    initialPopulationSize = 500;
     mutationRate = 0.01;
     crossoverRate = 0.8;
     crossoverMethod = 1;
@@ -108,7 +105,6 @@ void Menu::manualTests(){
                                                               mutationRate, mutationMethod, initialPopulationSize,
                                                               crossoverRate, crossoverMethod);
 
-//    geneticAlgorithm->launchCrossBreading(timer);
     geneticAlgorithm->launch();
 
     solution = geneticAlgorithm->bestSolution;
@@ -122,46 +118,27 @@ void Menu::manualTests(){
 
 void Menu::automaticTests(){
 
-//    FileWriter* fileWriter = new FileWriter();
+    FileWriter fileWriter;
+    fileWriter.filename = fileReader.filename;
+    fileWriter.initialPopulationSize = initialPopulationSize;
+    fileWriter.mutationMethod = mutationMethod;
+
+    std::string filenameOfBestSolution;
 
     for(int i=0; i<10; i++){
-//        SimulatedAnnealing* simulatedAnnealing = new SimulatedAnnealing(matrix, a, stopCriteria);
+        GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix, timer,
+                                                                  mutationRate, mutationMethod, initialPopulationSize,
+                                                                  crossoverRate, crossoverMethod);
         timer.startTimer();
-//        simulatedAnnealing->launchCrossBreading(timer);
-//
-//        simulatedAnnealing->printSolution();
-//        std::cout << "Solution found in: " << simulatedAnnealing->whenFound << std::endl;
+        geneticAlgorithm->launch();
 
-//        fileWriter->resultsTime[i] = simulatedAnnealing->whenFound;
-//        fileWriter->resultsRoute[i] = simulatedAnnealing->bestObjectiveFunction;
+        geneticAlgorithm->printSolution();
+        std::cout << "Solution found in: " << geneticAlgorithm->whenFound << std::endl;
 
-        std::string name;
-        std::cout << "Give name of file" << std::endl;
-        std::cin >> name;
+        fileWriter.write(geneticAlgorithm, i);
 
-        std::ofstream file(name);
-
-//        for(auto entry: simulatedAnnealing->save){
-//            file << entry.first << " " << entry.second << std::endl;
-//        }
-
-        file.close();
-
-        option7();
-
-//        delete simulatedAnnealing;
+        delete geneticAlgorithm;
     }
-
-    std::string graph; //f.e. ftv55
-    int i=0;
-    while(fileReader.filename[i]!='.'){
-        graph+=fileReader.filename[i];
-        i++;
-    }
-
-//    fileWriter->write("SA", graph);
-
-//    delete fileWriter;
 
 }
 

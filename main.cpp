@@ -12,8 +12,8 @@ int main() {
         std::cout << "2. Read stop criteria" << std::endl;
         std::cout << "3. Set initial population size" << std::endl;
         std::cout << "4. Set mutation rate" << std::endl;
-        std::cout << "5. Set cross breading coefficient" << std::endl;
-        std::cout << "6. Set method of cross breading" << std::endl;
+        std::cout << "5. Set crossover rate" << std::endl;
+        std::cout << "6. Set method of crossover" << std::endl;
         std::cout << "7. Set method of mutation" << std::endl;
         std::cout << "8. Launch algorithm and print scores" << std::endl;
 

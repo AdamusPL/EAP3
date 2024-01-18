@@ -42,7 +42,9 @@ public:
     void inversionMutation(std::vector<int>&);
 
     std::vector<int> generateBegSolutionRandom();
+    std::list<std::pair<double,int>> save;
     int calculateRoute(std::vector<int> track);
+    void printSolution();
 
 
 };
