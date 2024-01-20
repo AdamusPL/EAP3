@@ -53,16 +53,17 @@ public:
     bool foundInPath1;
     bool foundInPath2;
     //vectors with towns which are making conflicts (we use them later)
-    std::vector<int> leftTowns1;
-    std::vector<int> leftTowns2;
+    std::queue<int> leftTowns1;
+    std::queue<int> leftTowns2;
 
     int firstCrossBreadingPoint;
     int secondCrossBreadingPoint;
 
     void PMX(std::vector<int>, std::vector<int>);
+    std::vector<int> OX(std::vector<int>, std::vector<int>);
 
     void launch();
-    void insertWithoutConflicts(std::vector<int>&, std::vector<int>&, std::vector<int>&, std::vector<int>&);
+    void insertWithoutConflicts(std::vector<int>&, std::vector<int>&, std::vector<int>&, std::queue<int>&);
     void transpositionMutation(std::vector<int>&);
     void inversionMutation(std::vector<int>&);
 
