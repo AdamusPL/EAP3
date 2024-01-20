@@ -46,7 +46,7 @@ void FileWriter::write(GeneticAlgorithm* geneticAlgorithm, int numberOfTest){
 
     //if it's last test, we save where the best solution has been found
     if(numberOfTest == 9){
-        name = filename + "_best" + ".txt";
+        name = filename + "_" + std::to_string(initialPopulationSize) + "_" + std::to_string(mutationMethod) + "_best" + ".txt";
         std::ofstream file2(name);
         file2<<filenameOfBestSolution;
         file2.close();

@@ -87,8 +87,8 @@ void Menu::option8(){
 }
 
 void Menu::option0(){
-    stopCriteria = 360;
-    initialPopulationSize = 5000;
+    stopCriteria = 240;
+    initialPopulationSize = 100;
     mutationRate = 0.01;
     crossoverRate = 0.8;
     crossoverMethod = 1;

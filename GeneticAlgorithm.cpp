@@ -192,16 +192,6 @@ void GeneticAlgorithm::transpositionMutation(std::vector<int> &track) {
 
     std::swap(track[randomTownIndex1], track[randomTownIndex2]); //swap
 
-    //changing best solution
-    newObjectiveFunction = calculateRoute(track);
-
-    if (newObjectiveFunction < bestObjectiveFunction) {
-        bestObjectiveFunction = newObjectiveFunction;
-        bestSolution = track;
-        whenFound = timer.stopTimer() / 1000000.0;
-        std::cout << bestObjectiveFunction << std::endl;
-    }
-
 }
 
 void GeneticAlgorithm::inversionMutation(std::vector<int> &track) {
@@ -218,16 +208,6 @@ void GeneticAlgorithm::inversionMutation(std::vector<int> &track) {
     for (int j = randomTownIndex1; j <= randomTownIndex2; j++) {
         track[j] = substring.top();
         substring.pop();
-    }
-
-    //changing best solution
-    newObjectiveFunction = calculateRoute(track);
-
-    if (newObjectiveFunction < bestObjectiveFunction) {
-        bestObjectiveFunction = newObjectiveFunction;
-        bestSolution = track;
-        whenFound = timer.stopTimer() / 1000000.0;
-        std::cout << bestObjectiveFunction << std::endl;
     }
 
 }
