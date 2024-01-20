@@ -15,8 +15,10 @@
 class GeneticAlgorithm {
 public:
     GeneticAlgorithm(int stopCriteria, Matrix*, Timer, double mutationRate, int mutationMethod,
-                     int initialPopulationSize, double crossoverRate, int crossoverMethod);
+                     int initialPopulationSize, double crossoverRate, int crossoverMethod,
+                     bool tests);
 
+    bool tests;
     Matrix* matrix;
     Timer timer;
     std::vector<int> bestSolution;
@@ -35,9 +37,32 @@ public:
 
     double crossoverRate;
     int crossoverMethod;
+
+    //variables for submethods
+    //inversion
+    int randomTownIndex1;
+    int randomTownIndex2;
+    int newObjectiveFunction;
+    //stack to reverse numbers in inversionMutation
+    std::stack<int> substring;
+
+    //PMX
+    std::vector<int> child1;
+    std::vector<int> child2;
+    //inserting towns not making conflicts with parents
+    bool foundInPath1;
+    bool foundInPath2;
+    //vectors with towns which are making conflicts (we use them later)
+    std::vector<int> leftTowns1;
+    std::vector<int> leftTowns2;
+
+    int firstCrossBreadingPoint;
+    int secondCrossBreadingPoint;
+
     void PMX(std::vector<int>, std::vector<int>);
 
     void launch();
+    void insertWithoutConflicts(std::vector<int>&, std::vector<int>&, std::vector<int>&, std::vector<int>&);
     void transpositionMutation(std::vector<int>&);
     void inversionMutation(std::vector<int>&);
 
@@ -45,7 +70,6 @@ public:
     std::list<std::pair<double,int>> save;
     int calculateRoute(std::vector<int> track);
     void printSolution();
-
 
 };
 

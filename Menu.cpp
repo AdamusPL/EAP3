@@ -87,8 +87,8 @@ void Menu::option8(){
 }
 
 void Menu::option0(){
-    stopCriteria = 120;
-    initialPopulationSize = 500;
+    stopCriteria = 360;
+    initialPopulationSize = 1000;
     mutationRate = 0.01;
     crossoverRate = 0.8;
     crossoverMethod = 1;
@@ -96,6 +96,9 @@ void Menu::option0(){
 }
 
 void Menu::manualTests(){
+
+    bool tests = false;
+
     if(matrix == nullptr){
         std::cout<<"No data hasn't been read yet"<<std::endl;
         return;
@@ -103,7 +106,7 @@ void Menu::manualTests(){
 
     GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix, timer,
                                                               mutationRate, mutationMethod, initialPopulationSize,
-                                                              crossoverRate, crossoverMethod);
+                                                              crossoverRate, crossoverMethod, tests);
 
     geneticAlgorithm->launch();
 
@@ -124,11 +127,12 @@ void Menu::automaticTests(){
     fileWriter.mutationMethod = mutationMethod;
 
     std::string filenameOfBestSolution;
+    bool tests = true;
 
     for(int i=0; i<10; i++){
         GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix, timer,
                                                                   mutationRate, mutationMethod, initialPopulationSize,
-                                                                  crossoverRate, crossoverMethod);
+                                                                  crossoverRate, crossoverMethod, tests);
         timer.startTimer();
         geneticAlgorithm->launch();
 
