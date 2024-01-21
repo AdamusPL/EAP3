@@ -35,7 +35,7 @@ void FileWriter::write(GeneticAlgorithm* geneticAlgorithm, int numberOfTest){
     std::ofstream file1(name);
 
     //size of graph
-    file << geneticAlgorithm->bestSolution.size() << std::endl;
+    file1 << geneticAlgorithm->bestSolution.size() << std::endl;
 
     //path
     for(int town : geneticAlgorithm->bestSolution){

@@ -88,7 +88,7 @@ void Menu::option8(){
 
 void Menu::option0(){
     stopCriteria = 240;
-    initialPopulationSize = 100;
+    initialPopulationSize = 1000;
     mutationRate = 0.01;
     crossoverRate = 0.8;
     crossoverMethod = 1;
@@ -129,7 +129,7 @@ void Menu::automaticTests(){
     std::string filenameOfBestSolution;
     bool tests = true;
 
-    for(int i=0; i<10; i++){
+    for(int i=0; i<1; i++){
         GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix, timer,
                                                                   mutationRate, mutationMethod, initialPopulationSize,
                                                                   crossoverRate, crossoverMethod, tests);
