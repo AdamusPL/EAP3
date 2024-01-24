@@ -11,6 +11,7 @@
 class FileReader {
 public:
     Matrix* read();
+    Matrix* readTests(std::string);
     std::string filename;
 };
 

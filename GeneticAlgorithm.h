@@ -61,6 +61,9 @@ public:
 
 //    void PMX(std::vector<int>, std::vector<int>);
     std::vector<int> OX(std::vector<int>, std::vector<int>);
+    int j;
+    int begin;
+    std::vector<bool> visited;
 
     void launch();
 //    void insertWithoutConflicts(std::vector<int>&, std::vector<int>&, std::vector<int>&, std::queue<int>&);

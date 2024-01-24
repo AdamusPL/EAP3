@@ -30,6 +30,7 @@ public:
     void printSolution();
     void manualTests();
     void automaticTests();
+    void autoTests();
 
     std::vector<int> solution;
     int objectiveFunction;
@@ -37,6 +38,7 @@ public:
     Matrix* matrix;
     Timer timer;
     FileReader fileReader;
+    FileWriter fileWriter;
 
     int stopCriteria;
     int initialPopulationSize;

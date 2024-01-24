@@ -5,7 +5,7 @@ int main() {
     int option=0;
     Menu menu;
 
-    while(option!=9){ //menu
+    while(option!=10){ //menu
 
         std::cout << std::endl;
         std::cout << "1. Read data from file and print it" << std::endl;
@@ -51,6 +51,10 @@ int main() {
 
             case 8:
                 menu.option8();
+                break;
+
+            case 9:
+                menu.autoTests();
                 break;
 
             case 0: //custom setup

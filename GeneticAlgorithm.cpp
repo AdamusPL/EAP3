@@ -236,12 +236,21 @@ void GeneticAlgorithm::launch() {
     //generate random population
     while (population.size() < initialPopulationSize) {
         std::vector<int> solution = GeneticAlgorithm::generateBegSolutionRandom();
-
         newObjectiveFunction = calculateRoute(solution);
-        bestObjectiveFunction = newObjectiveFunction;
+
+        if(population.empty()){
+            bestObjectiveFunction = newObjectiveFunction;
+            bestSolution = solution;
+        }
+
+        else{
+            isNewBestSolution(solution);
+        }
+
         population.emplace_back(newObjectiveFunction, solution);
     }
 
+//    std::cout<<"Przeszlo";
 
     while (timer.stopTimer() / 1000000.0 < stopCriteria) {
 
@@ -321,7 +330,7 @@ void GeneticAlgorithm::isNewBestSolution(std::vector<int> &child) {
     if (newObjectiveFunction < bestObjectiveFunction) {
         bestObjectiveFunction = newObjectiveFunction;
         bestSolution = child;
-        std::cout << bestObjectiveFunction << std::endl;
+//        std::cout << bestObjectiveFunction << std::endl;
         whenFound = timer.stopTimer() / 1000000.0;
         if (tests) {
             save.emplace_back(whenFound, bestObjectiveFunction);

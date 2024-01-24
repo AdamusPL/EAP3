@@ -87,12 +87,12 @@ void Menu::option8(){
 }
 
 void Menu::option0(){
-    stopCriteria = 240;
-    initialPopulationSize = 1000;
+    stopCriteria = 360;
+    initialPopulationSize = 75000;
     mutationRate = 0.01;
     crossoverRate = 0.8;
     crossoverMethod = 1;
-    mutationMethod = 1;
+    mutationMethod = 2;
 }
 
 void Menu::manualTests(){
@@ -119,17 +119,135 @@ void Menu::manualTests(){
     delete geneticAlgorithm;
 }
 
+void Menu::autoTests(){
+
+    mutationRate = 0.01;
+    crossoverRate = 0.8;
+
+    for(int j=0; j<18; j++){
+
+        fileWriter.filename = "ftv47.atsp";
+
+        matrix = fileReader.readTests("ftv47.atsp");
+        stopCriteria = 120;
+
+        for(int k=0; k<2; k++){
+
+            if(k==0) {
+                mutationMethod = 1;
+                fileWriter.mutationMethod = mutationMethod;
+            }
+
+            else{
+                mutationMethod = 2;
+                fileWriter.mutationMethod = mutationMethod;
+            }
+
+            for(int l=0; l<3; l++){
+
+                if(l==0){
+                    initialPopulationSize = 100;
+                    fileWriter.initialPopulationSize = initialPopulationSize;
+                    automaticTests();
+                }
+
+                else if(l==1){
+                    initialPopulationSize = 1000;
+                    fileWriter.initialPopulationSize = initialPopulationSize;
+                    automaticTests();
+                }
+
+                else{
+                    initialPopulationSize = 5000;
+                    fileWriter.initialPopulationSize = initialPopulationSize;
+                    automaticTests();
+                }
+
+            }
+
+        }
+
+        matrix = fileReader.readTests("ftv170.atsp");
+        fileWriter.filename = "ftv170.atsp";
+        stopCriteria = 240;
+
+        for(int k=0; k<2; k++) {
+
+            if (k == 0) {
+                mutationMethod = 1;
+                fileWriter.mutationMethod = mutationMethod;
+            } else {
+                mutationMethod = 2;
+                fileWriter.mutationMethod = mutationMethod;
+            }
+
+            for (int l = 0; l < 3; l++) {
+
+                if (l == 0) {
+                    initialPopulationSize = 100;
+                    fileWriter.initialPopulationSize = initialPopulationSize;
+                    automaticTests();
+                } else if (l == 1) {
+                    initialPopulationSize = 1000;
+                    fileWriter.initialPopulationSize = initialPopulationSize;
+                    automaticTests();
+                } else {
+                    initialPopulationSize = 5000;
+                    fileWriter.initialPopulationSize = initialPopulationSize;
+                    automaticTests();
+                }
+
+            }
+
+        }
+
+        matrix = fileReader.readTests("rbg403.atsp");
+        fileWriter.filename = "rbg403.atsp";
+        stopCriteria = 360;
+
+        for(int k=0; k<2; k++) {
+
+            if (k == 0) {
+                mutationMethod = 1;
+                fileWriter.mutationMethod = mutationMethod;
+            } else {
+                mutationMethod = 2;
+                fileWriter.mutationMethod = mutationMethod;
+            }
+
+            for (int l = 0; l < 3; l++) {
+
+                if (l == 0) {
+                    initialPopulationSize = 100;
+                    fileWriter.initialPopulationSize = initialPopulationSize;
+                    automaticTests();
+                } else if (l == 1) {
+                    initialPopulationSize = 1000;
+                    fileWriter.initialPopulationSize = initialPopulationSize;
+                    automaticTests();
+                } else {
+                    initialPopulationSize = 5000;
+                    fileWriter.initialPopulationSize = initialPopulationSize;
+                    automaticTests();
+                }
+
+            }
+
+        }
+
+    }
+}
+
 void Menu::automaticTests(){
 
-    FileWriter fileWriter;
-    fileWriter.filename = fileReader.filename;
-    fileWriter.initialPopulationSize = initialPopulationSize;
-    fileWriter.mutationMethod = mutationMethod;
+//    FileWriter fileWriter;
+//    fileWriter.filename = fileReader.filename;
+//    fileWriter.initialPopulationSize = initialPopulationSize;
+//    fileWriter.mutationMethod = mutationMethod;
 
-    std::string filenameOfBestSolution;
     bool tests = true;
 
-    for(int i=0; i<1; i++){
+    for(int i=0; i < 5; i++){
         GeneticAlgorithm* geneticAlgorithm = new GeneticAlgorithm(stopCriteria, matrix, timer,
                                                                   mutationRate, mutationMethod, initialPopulationSize,
                                                                   crossoverRate, crossoverMethod, tests);
