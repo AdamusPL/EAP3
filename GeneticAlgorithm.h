@@ -49,25 +49,14 @@ public:
     //PMX
     std::vector<int> child1;
     std::vector<int> child2;
-    //inserting towns not making conflicts with parents
-//    bool foundInPath1;
-//    bool foundInPath2;
-    //vectors with towns which are making conflicts (we use them later)
-//    std::queue<int> leftTowns1;
-//    std::queue<int> leftTowns2;
 
-    int firstCrossBreadingPoint;
-    int secondCrossBreadingPoint;
+    int firstCrossoverPoint;
+    int secondCrossoverPoint;
 
-//    void PMX(std::vector<int>, std::vector<int>);
     std::vector<int> OX(std::vector<int>, std::vector<int>);
-    int j;
-    int begin;
     std::vector<bool> visited;
 
     void launch();
-//    void insertWithoutConflicts(std::vector<int>&, std::vector<int>&, std::vector<int>&, std::queue<int>&);
-//    void insertLeftTowns(std::vector<int>&, std::vector<int>&, std::queue<int>&);
     void transpositionMutation(std::vector<int>&);
     void inversionMutation(std::vector<int>&);
     void isNewBestSolution(std::vector<int>&);

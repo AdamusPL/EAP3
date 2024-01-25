@@ -20,9 +20,9 @@ GeneticAlgorithm::GeneticAlgorithm(int stopCriteria, Matrix *matrix, Timer timer
 
 std::vector<int> GeneticAlgorithm::generateBegSolutionRandom() {
     std::vector<int> track;
-    std::vector<std::pair<bool, int>> visited; //vector to help to decide
+    std::vector<std::pair<bool, int>> visited; //vector to help to decide if town was already visited
 
-    for (int i = 0; i < matrix->nrV; ++i) { //filling the vector
+    for (int i = 0; i < matrix->nrV; ++i) { //filling the vector with false
         visited.push_back(std::make_pair(false, i));
     }
 
@@ -40,15 +40,10 @@ std::vector<int> GeneticAlgorithm::generateBegSolutionRandom() {
 
     }
 
-//    for (int i = 0; i < track.size(); ++i) {
-//        std::cout << track[i] << "->";
-//    }
-//
-//    std::cout << track[0];
-//    std::cout<<std::endl;
     return track;
 }
 
+//method to check if generated path is correct(if it doesn't have the same number more than once)
 void checkPath(std::vector<int> track1) {
     std::vector<bool> visited;
 
@@ -70,32 +65,41 @@ std::vector<int> GeneticAlgorithm::OX(std::vector<int> track1, std::vector<int> 
     std::vector<int> child;
 
     //1. two random cross-breading points [x1,x2]
-    firstCrossBreadingPoint = rand() % (track1.size() - 1);
-    secondCrossBreadingPoint = firstCrossBreadingPoint + 1 + rand() % (track1.size() - firstCrossBreadingPoint -
-                                                                       1);
-
+    firstCrossoverPoint = rand() % (track1.size() - 1);
+    secondCrossoverPoint = firstCrossoverPoint + 1 + rand() % (track1.size() - firstCrossoverPoint -
+                                                               1);
+    //fill the child with -1 value
     child.assign(track1.size(), -1);
 
+    //vector with visited nodes
     std::vector<bool> visited;
     visited.assign(track1.size(), false);
 
-    for (int i = firstCrossBreadingPoint; i <= secondCrossBreadingPoint; i++) {
+    //copy towns from random range from parent1 to child
+    for (int i = firstCrossoverPoint; i <= secondCrossoverPoint; i++) {
         child[i] = track1[i];
+        //it becomes visited
         visited[track1[i]] = true;
     }
 
+    //index in parent2
     int begin;
 
-    if(secondCrossBreadingPoint == track1.size()-1){
+    //if second crossover point is at the end of the path, we will begin the comparison from index 0 of parent 2
+    if(secondCrossoverPoint == track1.size() - 1){
         begin = 0;
     }
+    //otherwise, we just take index one after second crossover point
     else{
-        begin = secondCrossBreadingPoint + 1;
+        begin = secondCrossoverPoint + 1;
     }
 
+    //j <- index in child
     int j = begin;
 
+    //in range [begin, track1.size()-1]
     for (int i = begin; i < track1.size(); i++) {
+        //if it's not visited, we put it in path
         if (!visited[track2[i]]) {
             child[j] = track2[i];
             visited[track2[i]] = true;
@@ -103,15 +107,18 @@ std::vector<int> GeneticAlgorithm::OX(std::vector<int> track1, std::vector<int> 
         }
     }
 
+    //if we reached last index in child, we must change it to 0
     if(j == track1.size()){
         j = 0;
     }
 
-    for (int i = 0; i <= secondCrossBreadingPoint; i++) {
+    //in range [0, secondCrossoverPoint]
+    for (int i = 0; i <= secondCrossoverPoint; i++) {
         if (!visited[track2[i]]) {
             child[j] = track2[i];
             visited[track2[i]] = true;
             j++;
+            //if we reached last index in child, we must change it to 0
             if(j == track1.size()){
                 j=0;
             }
@@ -122,78 +129,6 @@ std::vector<int> GeneticAlgorithm::OX(std::vector<int> track1, std::vector<int> 
 
 
 }
-
-////Partially Matched Crossover
-//void GeneticAlgorithm::PMX(std::vector<int> track1, std::vector<int> track2) {
-//
-//    //1. two random cross-breading points [x1,x2]
-//    firstCrossBreadingPoint = rand() % (track1.size() - 1);
-//    secondCrossBreadingPoint = firstCrossBreadingPoint + 1 + rand() % (track1.size() - firstCrossBreadingPoint -
-//                                                                       1);
-//
-//    //fill the children with "-1"
-//    child1.assign(track1.size(), -1);
-//    child2.assign(track1.size(), -1);
-//
-//    //2. swap sections
-//    for (int i = firstCrossBreadingPoint; i <= secondCrossBreadingPoint; ++i) {
-//        child1[i] = track2[i];
-//        child2[i] = track1[i];
-//    }
-//
-//    //3. insert towns from parents which don't make conflicts
-//    GeneticAlgorithm::insertWithoutConflicts(track1, child1, child2, leftTowns1);
-//    GeneticAlgorithm::insertWithoutConflicts(track2, child2, child1, leftTowns2);
-//
-//    //4. left towns: insert going from left side, watching the mapping table
-//    GeneticAlgorithm::insertLeftTowns(track1, child1, leftTowns1);
-//    GeneticAlgorithm::insertLeftTowns(track2, child2, leftTowns2);
-//
-//}
-//
-//void GeneticAlgorithm::insertLeftTowns(std::vector<int> &track, std::vector<int> &child, std::queue<int> &leftTowns) {
-//    while (!leftTowns.empty()) {
-//        for (int j = 0; j < track.size(); ++j) {
-//            if (child[j] == -1) {
-//                child[j] = leftTowns.front();
-//                leftTowns.pop();
-//                break;
-//            }
-//        }
-//    }
-//}
-
-//void
-//GeneticAlgorithm::insertWithoutConflicts(std::vector<int> &track, std::vector<int> &child1, std::vector<int> &child2,
-//                                         std::queue<int> &leftTowns) {
-//
-//    for (int i = 0; i < track.size(); ++i) {
-//
-//        foundInPath1 = false;
-//        foundInPath2 = false;
-//
-//        for (int j = firstCrossBreadingPoint; j <= secondCrossBreadingPoint; ++j) {
-//
-//            //if town exists already in new track, don't insert it
-//            if (track[i] == child1[j]) {
-//                foundInPath1 = true;
-//            }
-//
-//            if (track[i] == child2[j]) {
-//                foundInPath2 = true;
-//            }
-//
-//        }
-//
-//        //insert town if it doesn't exist
-//        if (foundInPath2 && !foundInPath1) {
-//            leftTowns.push(track[i]);
-//        } else if (!foundInPath1 && !foundInPath2) {
-//            child1[i] = track[i];
-//        }
-//
-//    }
-//}
 
 void GeneticAlgorithm::transpositionMutation(std::vector<int> &track) {
 
@@ -216,10 +151,12 @@ void GeneticAlgorithm::inversionMutation(std::vector<int> &track) {
     randomTownIndex2 = randomTownIndex1 + 1 + rand() % (track.size() - randomTownIndex1 -
                                                         1); //2. random town from range (randomTownIndex1; track.size())
 
+                                                        //put numbers from random range on stack
     for (int j = randomTownIndex1; j <= randomTownIndex2; j++) {
         substring.emplace(track[j]);
     }
 
+    //get numbers from stack in the same range
     for (int j = randomTownIndex1; j <= randomTownIndex2; j++) {
         track[j] = substring.top();
         substring.pop();
@@ -235,22 +172,25 @@ void GeneticAlgorithm::launch() {
 
     //generate random population
     while (population.size() < initialPopulationSize) {
+        //generate random solution
         std::vector<int> solution = GeneticAlgorithm::generateBegSolutionRandom();
+        //calculate path
         newObjectiveFunction = calculateRoute(solution);
 
+        //if it's the first solution in population, set it to best solution
         if(population.empty()){
             bestObjectiveFunction = newObjectiveFunction;
             bestSolution = solution;
         }
 
+        //check if it's better than the best solution
         else{
             isNewBestSolution(solution);
         }
 
+        //put random solution in population
         population.emplace_back(newObjectiveFunction, solution);
     }
-
-//    std::cout<<"Przeszlo";
 
     while (timer.stopTimer() / 1000000.0 < stopCriteria) {
 
@@ -269,18 +209,22 @@ void GeneticAlgorithm::launch() {
             population.pop_back();
         }
 
+        //while population+children size is lower than populationSize
         while (population.size() + children.size() < initialPopulationSize) {
             randomParent1 = rand() % population.size();
             randomParent2 = rand() % population.size();
 
+            //it has to be 2 different parents to crossover
             while (randomParent2 == randomParent1) {
                 randomParent2 = rand() % population.size();
             }
 
             //crossover
             if (static_cast<double>(rand() % 100 + 1) / 100.0 <= crossoverRate) {
-//                GeneticAlgorithm::PMX(population[randomParent1].second, population[randomParent2].second);
+                //generate two children
+                //first - crossover parent1, parent2
                 child1 = GeneticAlgorithm::OX(population[randomParent1].second, population[randomParent2].second);
+                //second - crossover parent2, parent1
                 child2 = GeneticAlgorithm::OX(population[randomParent2].second, population[randomParent1].second);
 
                 //mutations
@@ -296,6 +240,7 @@ void GeneticAlgorithm::launch() {
                     }
                 }
 
+                //put new children to children vector
                 children.emplace_back(calculateRoute(child1), child1);
                 children.emplace_back(calculateRoute(child2), child2);
 
@@ -303,10 +248,12 @@ void GeneticAlgorithm::launch() {
                 isNewBestSolution(child1);
                 isNewBestSolution(child2);
 
+                //clear children
                 child1.clear();
                 child2.clear();
 
             } else {
+                //if it doesn't crossover under specific probability, new children are exactly as their parents
                 children.emplace_back(calculateRoute(population[randomParent1].second),
                                       population[randomParent1].second);
                 children.emplace_back(calculateRoute(population[randomParent2].second),
@@ -315,6 +262,7 @@ void GeneticAlgorithm::launch() {
 
         }
 
+        //put children to population
         for (int i = 0; i < children.size(); i++) {
             population.push_back(children[i]);
         }
@@ -327,11 +275,13 @@ void GeneticAlgorithm::launch() {
 void GeneticAlgorithm::isNewBestSolution(std::vector<int> &child) {
     newObjectiveFunction = calculateRoute(child);
 
+    //if new solution is better, then change it
     if (newObjectiveFunction < bestObjectiveFunction) {
         bestObjectiveFunction = newObjectiveFunction;
         bestSolution = child;
 //        std::cout << bestObjectiveFunction << std::endl;
         whenFound = timer.stopTimer() / 1000000.0;
+        //if it's tests, then save score
         if (tests) {
             save.emplace_back(whenFound, bestObjectiveFunction);
         }
